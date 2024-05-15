@@ -1,8 +1,20 @@
 import wollok.game.*
-import pepita.*
+import bombita.*
+import otros.*
 
-program juego {
-	game.title("Juego Base")
-	game.addVisual(pepita)
+program Bombita {
+
+	//CONFIG
+	game.title("Bombita")
+	game.width(26)
+	game.height(12)
+	
+	//VISUALES
+	game.addVisualCharacter(new Jugador())
+	40.times{i => game.addVisual(new Caja())} //Probablmente se puede mejorar para que spawneen mejor distribuidas las cajas
+	
+		
+	//JUEGO
 	game.start()
 }
+
