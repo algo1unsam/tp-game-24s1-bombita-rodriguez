@@ -1,6 +1,23 @@
+import config.*
+import bombita.*
+import mejoras.*
+import wollok.game.*
+import otros.*
+import bombas.*
 
-test "testX" {
+describe "cosas"{
 
-	assert.that(true)
+method initialize(){
+	game.clear()
+} 
 
+test "agarra la mejora"{
+	const jugador = new Jugador(position = game.at(1,1))
+	const mate = new TomaMate(position = game.at(1,5), image = "bombita.png")
+	game.addVisual(jugador)
+	game.addVisual(mate)
+	jugador.irA(mate.position())
+	config.tomarMejora(jugador)
+	assert.that(jugador.mejoras().contains(mate)) 
+}
 }

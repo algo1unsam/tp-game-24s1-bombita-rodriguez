@@ -1,18 +1,19 @@
 import wollok.game.*
 import bombita.*
 import otros.*
+import config.*
 
 program Bombita {
 
 	//CONFIG
 	game.title("Bombita")
-	game.width(26)
-	game.height(12)
+	game.width(25)
+	game.height(11)
 	
 	//VISUALES
-	game.addVisualCharacter(new Jugador())
-	40.times{i => game.addVisual(new Caja())} //Probablmente se puede mejorar para que spawneen mejor distribuidas las cajas
-	
+	iniciarJugador1.iniciar()
+	iniciarParedes.iniciar()
+	iniciarCajas.iniciar()
 		
 	//JUEGO
 	game.start()

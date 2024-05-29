@@ -1,27 +1,63 @@
-class Velocidad{
-	var property nuevaVelocidad
-	
-	method activar(personaje){
-		//personaje.velocidad(nuevaVelocidad)
-	}
+import wollok.game.*
+
+class Mejoras{
+	const property image
+	var property position
 	
 	method desactivar(personaje){
-		//personaje.velocidad(-nuevaVelocidad)
+		return true
+	}
+	
+	method activar(personaje){
+		
+	}
+	
+	method seQuemo(){}
+	method esMejora() = true
+	method esPared() = false
+	method esCaja() = false
+	method esBomba() = false	
+}
+
+class TomaMate inherits Mejoras{
+	
+	override method activar(personaje){
+		game.schedule(5000, self.desactivar(personaje))
+		personaje.escudo(true)
+	}
+	
+	override method desactivar(personaje){
+		personaje.escudo(false)
+		return true
 	}
 }
 
-const tomaMate = new Velocidad( nuevaVelocidad = 5 )
-const fumaPorro = new Velocidad( nuevaVelocidad = -5 )
-
-object comeAsado{
-	const nuevoRadio = 3
-	const radioDefault = 1
+class FumaPorro inherits Mejoras{
+	var property nuevaVelocidad = 2
+	var property velDefault = 1
 	
-	method activar(personaje){
-		//personaje.radio(nuevoRadio)
+	override method activar(personaje){
+		game.schedule(5000, self.desactivar(personaje))
+		personaje.velocidad(nuevaVelocidad)
 	}
 	
-	method desactivar(personaje){
-		//personaje.radio(radioDefault)
+	override method desactivar(personaje){
+		personaje.velocidad(velDefault)
+		return true
+	}
+}
+
+class ComeAsado inherits Mejoras{
+	const nuevoRadio = 2
+	const radioDefault = 1
+	
+	override method activar(personaje){
+		game.schedule(5000, self.desactivar(personaje))
+		personaje.radio(nuevoRadio)
+	}
+	
+	override method desactivar(personaje){
+		personaje.radio(radioDefault)
+		return true
 	}
 }
