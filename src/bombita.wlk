@@ -9,7 +9,7 @@ import Colisionadores.*
 
 
 class Jugador {
-	
+	var property radioAumentado = false
 	var property puedevolveramoverse = true
 	var property radio = 5
 	var property position
@@ -17,31 +17,31 @@ class Jugador {
 	var property cantBombas = 0
  	var property velocidad = 1
   	var property escudo = false
-  	const property mejoras = []
+  	var property mejoras = []
   	var property estaVivo = true
   	var property image = imagenElegida.imagenelegida()
   	
-//  	method imagen(){if(mejoras.any{p=>p.esMejora()}){
-//		image = "bombita.png"
-//	}else{
-//		return "BOMBITARODRIGUEZ.png"
-//	}}
+  	method image(){if(mejoras.any{p=>p.esMejora()}){
+		return "bombita.png"
+	}else if(escudo){
+		return "cajita.png"
+	} else{
+		return image	
+	}}
   
 	method mejoras(){return mejoras}
 	
 	method seQuemo(){
-		if(escudo){
-			escudo = false
-		}else{
-		estaVivo = false
-		config.gameOver()
+		if(!escudo){
+			estaVivo = false
+			config.gameOver(self)
 		}
 	}
 	
 	method soltarBomba(posicion){
 	if(self.cantBombas()<3){ 
 		self.cantBombas(self.cantBombas()+1)
-		game.addVisual(new Bomba().PoneBomba(posicion, self))
+		game.addVisual(new Bomba().PoneBomba(posicion, self, radioAumentado))
 	}else{}
 	}
 	
@@ -60,7 +60,38 @@ class Jugador {
 	}
 	
 	method agarrarMejora(mejora){
-		mejoras.add(mejora)
+		if(self.validarMejora(mejora)){
+			mejoras.add(mejora)
+			game.removeVisual(mejora)	
+		} else{
+			game.say(self,'Ya tengo la mejora')
+		}
+	}
+
+	method validarMejora(mejora){
+		if(mejoras.size() != 0 ){
+			const boolArray = mejoras.map({
+				m => self.comparaString(m.contiene(),mejora.contiene())
+			})
+			return !boolArray.contains(true)
+		} else {
+			return true
+		}
+	}
+	
+	method comparaString(s1,s2){
+		return s1 == s2
+	}
+
+	method activarMejora(){
+		if (mejoras.size() != 0){
+			const mejoraParaActivar = mejoras.first()
+			mejoras.remove(mejoraParaActivar)
+			mejoraParaActivar.activar(self)
+			game.say(self, mejoraParaActivar.mensajeActivacion())
+		} else {
+			game.say(self, 'No Tengo Mejoras :(')
+		}
 	}
 	
 
@@ -68,6 +99,7 @@ class Jugador {
 	method esCaja() = false
 	method esBomba() = false
 	method esMejora() = false
+	method esJugador() = true
 
 }
 
@@ -86,7 +118,7 @@ class Enemigos {
 	if(self.cantBombas()<3 and reload){
 		reload = false 
 		self.cantBombas(self.cantBombas()+1)
-		game.addVisual(new Bomba().PoneBomba(posicion, self))
+		game.addVisual(new Bomba().PoneBomba(posicion, self, false))
 		game.schedule(3000, {reload = true})
 		
 	}else{}
@@ -175,6 +207,7 @@ class Enemigos {
 	method esPared() = false
 	method esCaja() = false
 	method esBomba() = false
+	method esJugador() = true
 //tiene que chequear que este mas a la izquierda, derecha arriba o abajo
 
 
