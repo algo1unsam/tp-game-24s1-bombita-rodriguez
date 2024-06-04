@@ -53,6 +53,7 @@ class Colisionadores{
 	method esPared() = false
 	method esCaja() = false
 	method esBomba() = false
+	method esJugador() = false
 		
 }
 
