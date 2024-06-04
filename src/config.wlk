@@ -146,23 +146,45 @@ object iniciarParedes {
 }
 
 object iniciarCajas{
+	const coord = []
+	var coordX=1
+	var coordY=1
 
-	method generarCajas(fila){
-		var nuevaPos = game.at(1.randomUpTo(23), fila)
-
-		if (nuevaPos == game.at(1, 1) or nuevaPos == game.at(23, 9)){
-			return self.generarCajas(fila)
+	method llenoVector(){//funcion que usa una especie de recursividad con el ontick para llenar el vector de coordenadas posibles para las paredes
+		game.onTick(1,"llenaarray", {if (coordX == (game.width()-2) and coordY == (game.height()-2)){
+			self.iniciar()
+			
+		}else{
+			if ((coordX == 1 or coordX == game.width()-2) and (coordY == 1 or coordY == game.height()-2)){
+				if (coordX==23){
+						coordX=1
+						coordY= coordY +2
+					}else{coordX = coordX + 2}
+			}
+				else{
+					coord.add(game.at(coordX, coordY))
+					if (coordX==23){
+						coordX=1
+						coordY= coordY +2
+					}else{coordX = coordX + 2}}
+			
+			}
+			
+			
+			})
+		
+			
+			//(game.width()-2) and coordY == (game.height()-2)
+		
+		
 		}
-		return nuevaPos
-	}
 	
-	method iniciar(){
-		11.times {i => game.addVisual(new Caja(position = self.generarCajas(1)))}
-		11.times {i => game.addVisual(new Caja(position = self.generarCajas(3)))}
-		11.times {i => game.addVisual(new Caja(position = self.generarCajas(5)))}
-		11.times {i => game.addVisual(new Caja(position = self.generarCajas(7)))}
-		11.times {i => game.addVisual(new Caja(position = self.generarCajas(9)))}
-	} //genera las cajas medio random pero por fila
+	method iniciar(){//elije al azar los lugares y los carga en pantalla
+		game.removeTickEvent("llenaarray")
+		66.times({i => game.addVisual(new Caja(position = coord.anyOne()))})}
+	//}
+	//} //genera las cajas medio random pero por fila
+	
 }
 
 
@@ -177,41 +199,24 @@ object config {
 	}
 	
 	method reiniciarJuego(){
-		if (!estaReiniciado){
 		game.clear()
-		iniciarJugador1.iniciar()
+		iniciarCajas.llenoVector()
 		iniciarParedes.iniciar()
-		iniciarCajas.iniciar()
-		jugador1.estaVivo(true)
-		jugador1.puedevolveramoverse(true)
-		jugador1.position(game.at(1, 1))
-		jugador1.posicionPrevia(jugador1.position())
-		enemigo1.position(game.at(23,9))
-		enemigo1.posicionPrevia(enemigo1.position())
-		enemigo1.image("BOMBITARODRIGUEZ.png")
-		enemigo1.cantBombas(0)
-		enemigo1.reload(true)
-		
-		estaReiniciado = true
-		
-		
-		
-		
-		}
+		jugador1.mejoras().clear()
+		game.schedule(2500, {iniciarJugador1.iniciar()})
 	}
 
 	method tomarMejora(jugador) {
 		game.onCollideDo(jugador, {objeto => 
 			if(objeto.esMejora()){
 				jugador.agarrarMejora(objeto)
-				game.removeVisual(objeto)
 			} //agarra las mejoras y las agrega a la lista del personaje
 		})
 	}
 
 	method configurarColisiones(jugador) {
 		game.onCollideDo(jugador, {objeto =>
-			if(objeto.esCaja() || objeto.esPared() || objeto.esBomba()){
+			if(objeto.esCaja() || objeto.esPared() || objeto.esBomba() || objeto.esJugador()){
 				jugador.volver()
 			}
 			}) //metodo para que el jugador y el enemigo colisionen
@@ -235,6 +240,20 @@ object config {
 		keyboard.enter().onPressDo({if (pantallaInicio.chequea()){pantallaInicio.eligio()}})
 		keyboard.g().onPressDo({if (pantallaInicio.chequea()){pantallaInicio.elegido(2)}})
 	}
+
+	method reconfigurarTeclas(){
+		keyboard.right().onPressDo({ self.verificarPosicionX(jugador1.position().left(1)) })
+		keyboard.left().onPressDo({self.verificarPosicionX(jugador1.position().right(1)) })
+		keyboard.up().onPressDo({ self.verificarPosicionY(jugador1.position().down(1)) })
+		keyboard.down().onPressDo({ self.verificarPosicionY(jugador1.position().up(1)) })
+	}
+	
+	method volverTeclas(){
+		keyboard.left().onPressDo({ self.verificarPosicionX(jugador1.position().left(1)) })
+		keyboard.right().onPressDo({self.verificarPosicionX(jugador1.position().right(1)) })
+		keyboard.down().onPressDo({ self.verificarPosicionY(jugador1.position().down(1)) })
+		keyboard.up().onPressDo({ self.verificarPosicionY(jugador1.position().up(1)) })
+	}
 	
 	method verificarPosicionX(as){
 		if (as.x().between(1,23)){
@@ -252,8 +271,7 @@ object config {
 	
 
 	method configurarSeguimiento(enemigo){
-		game.onTick(3000,"Persigue", {enemigo.PersigueVertical(jugador1.position(),jugador1.position().y(), jugador1.position().y())})
-	
+		game.onTick(2300,"Persigue", {enemigo.Persigue(jugador1.position() ,jugador1.position().x(), jugador1.position().y())})
 	}
 
 }
