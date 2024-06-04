@@ -2,6 +2,7 @@ import wollok.game.*
 import bombita.*
 import otros.*
 import config.*
+import pantallainicio.*
 
 program Bombita {
 
@@ -9,16 +10,12 @@ program Bombita {
 	game.title("Bombita")
 	game.width(25)
 	game.height(11)
-	
-	//PANTALLA DE INICIO
-	
+	game.boardGround("fondo.jpg")
 	
 	//VISUALES
-	iniciarCajas.llenoVector()
-	iniciarParedes.iniciar()
-	game.schedule(2500, {iniciarJugador1.iniciar()})
+	pantallaInicio.On()
+	
 		
 	//JUEGO
 	game.start()
 }
-

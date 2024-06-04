@@ -1,37 +1,25 @@
 import bombas.*
 import bombita.*
-import mejoras.*
+//import mejoras.*
 import otros.*
 import wollok.game.*
 import Colisionadores.*
+import pantallainicio.*
 
 const jugador1 = new Jugador(position = game.at(1,1))
 const enemigo1 = new Enemigos(position = game.at(23,9))
-const enemigo2 = new Enemigos(position = game.at(1,9))
-const enemigo3 = new Enemigos(position = game.at(23,1))
+
 object iniciarJugador1 {
 	method iniciar(){
-	jugador1.estaVivo(true)
-	jugador1.position(game.at(1, 1))
-	config.configurarTeclas()
-	enemigo1.position(game.at(23,9))
-	enemigo2.position(game.at(1,9))
-	enemigo3.position(game.at(23,1))
 	game.addVisual(jugador1)
 	game.addVisual(enemigo1)
-	game.addVisual(enemigo3)
-	game.addVisual(enemigo2)
-	config.configurarSeguimiento(enemigo1)
-	config.configurarSeguimiento(enemigo2)
-	config.configurarSeguimiento(enemigo3)
+	config.configurarTeclas()
+	game.schedule(2000,{config.configurarSeguimiento(enemigo1)})
 	config.configurarColisiones(jugador1)
 	config.configurarColisiones(enemigo1)
-	config.configurarColisiones(enemigo2)
-	config.configurarColisiones(enemigo3)
 	config.tomarMejora(jugador1)
 	enemigo1.creacolisionadores()
-	enemigo3.creacolisionadores()
-	enemigo2.creacolisionadores()
+//	enemigo1.seDestraba()
 
 }
 }
@@ -158,116 +146,94 @@ object iniciarParedes {
 }
 
 object iniciarCajas{
-	const coord = []
-	var coordX=1
-	var coordY=1
-	
 
-	method llenoVector(){//funcion que usa una especie de recursividad con el ontick para llenar el vector de coordenadas posibles para las paredes
-		game.onTick(1,"llenaarray", {if (coordX == (game.width()-2) and coordY == (game.height()-2)){
-			self.iniciar()
-			
-		}else{
-			if ((coordX == 1 or coordX == game.width()-2) and (coordY == 1 or coordY == game.height()-2)){
-				if (coordX==23){
-						coordX=1
-						coordY= coordY +2
-					}else{coordX = coordX + 2}
-			}
-				else{
-					coord.add(game.at(coordX, coordY))
-					if (coordX==23){
-						coordX=1
-						coordY= coordY +2
-					}else{coordX = coordX + 2}}
-			
-			}
-			
-			
-			})
-		
-			
-			//(game.width()-2) and coordY == (game.height()-2)
-		
-		
+	method generarCajas(fila){
+		var nuevaPos = game.at(1.randomUpTo(23), fila)
+
+		if (nuevaPos == game.at(1, 1) or nuevaPos == game.at(23, 9)){
+			return self.generarCajas(fila)
 		}
-		
+		return nuevaPos
+	}
 	
-
-//	method generarCajas(){
-//		const nuevaPos = game.at(1.randomUpTo(23), fila)
-//
-//		if (nuevaPos == game.at(1, 1) or nuevaPos == game.at(23, 9)){
-//			return self.generarCajas(fila)
-//		}
-//		return nuevaPos
-//	}
-//	
-	method iniciar(){//elije al azar los lugares y los carga en pantalla
-		game.removeTickEvent("llenaarray")
-		66.times({i => game.addVisual(new Caja(position = coord.anyOne()))})}
-	//}
-	//} //genera las cajas medio random pero por fila
-	
-	
-	
-	
-	
+	method iniciar(){
+		11.times {i => game.addVisual(new Caja(position = self.generarCajas(1)))}
+		11.times {i => game.addVisual(new Caja(position = self.generarCajas(3)))}
+		11.times {i => game.addVisual(new Caja(position = self.generarCajas(5)))}
+		11.times {i => game.addVisual(new Caja(position = self.generarCajas(7)))}
+		11.times {i => game.addVisual(new Caja(position = self.generarCajas(9)))}
+	} //genera las cajas medio random pero por fila
 }
+
 
 object config {
 	
+	var property estaReiniciado = false
 	
-	method gameOver(jugador){
-		game.say(jugador, "Presiona R para reiniciar")
+	method gameOver(){
+		estaReiniciado = false
+		game.say(jugador1, "Presiona R para reiniciar")
 		keyboard.r().onPressDo({self.reiniciarJuego()})	//Intente armar metodo para reiniciar el juego pero no se puede mover el jugador
 	}
 	
 	method reiniciarJuego(){
+		if (!estaReiniciado){
 		game.clear()
-		iniciarCajas.llenoVector()
+		iniciarJugador1.iniciar()
 		iniciarParedes.iniciar()
-		jugador1.mejoras().clear()
-		game.schedule(2500, {iniciarJugador1.iniciar()})
+		iniciarCajas.iniciar()
+		jugador1.estaVivo(true)
+		jugador1.puedevolveramoverse(true)
+		jugador1.position(game.at(1, 1))
+		jugador1.posicionPrevia(jugador1.position())
+		enemigo1.position(game.at(23,9))
+		enemigo1.posicionPrevia(enemigo1.position())
+		enemigo1.image("BOMBITARODRIGUEZ.png")
+		enemigo1.cantBombas(0)
+		enemigo1.reload(true)
+		
+		estaReiniciado = true
+		
+		
+		
+		
+		}
 	}
 
 	method tomarMejora(jugador) {
 		game.onCollideDo(jugador, {objeto => 
 			if(objeto.esMejora()){
 				jugador.agarrarMejora(objeto)
+				game.removeVisual(objeto)
 			} //agarra las mejoras y las agrega a la lista del personaje
 		})
 	}
 
 	method configurarColisiones(jugador) {
 		game.onCollideDo(jugador, {objeto =>
-			if(objeto.esCaja() || objeto.esPared() || objeto.esBomba() || objeto.esJugador()){
+			if(objeto.esCaja() || objeto.esPared() || objeto.esBomba()){
 				jugador.volver()
 			}
 			}) //metodo para que el jugador y el enemigo colisionen
 	}
-		
+	
+	method borraTeclas(){
+		keyboard.left().onPressDo({})
+		keyboard.right().onPressDo({ })
+		keyboard.down().onPressDo({})
+		keyboard.up().onPressDo({})
+		keyboard.k().onPressDo({})
+		keyboard.enter().onPressDo({})
+	}
+	
 	method configurarTeclas() {
-		keyboard.left().onPressDo({ self.verificarPosicionX(jugador1.position().left(1)) })
-		keyboard.right().onPressDo({self.verificarPosicionX(jugador1.position().right(1)) })
-		keyboard.down().onPressDo({ self.verificarPosicionY(jugador1.position().down(1)) })
-		keyboard.up().onPressDo({ self.verificarPosicionY(jugador1.position().up(1)) })
-		keyboard.k().onPressDo({ jugador1.soltarBomba(jugador1.position())})
-		keyboard.l().onPressDo({ jugador1.activarMejora()})
-	}
-	
-	method reconfigurarTeclas(){
-		keyboard.right().onPressDo({ self.verificarPosicionX(jugador1.position().left(1)) })
-		keyboard.left().onPressDo({self.verificarPosicionX(jugador1.position().right(1)) })
-		keyboard.up().onPressDo({ self.verificarPosicionY(jugador1.position().down(1)) })
-		keyboard.down().onPressDo({ self.verificarPosicionY(jugador1.position().up(1)) })
-	}
-	
-	method volverTeclas(){
-		keyboard.left().onPressDo({ self.verificarPosicionX(jugador1.position().left(1)) })
-		keyboard.right().onPressDo({self.verificarPosicionX(jugador1.position().right(1)) })
-		keyboard.down().onPressDo({ self.verificarPosicionY(jugador1.position().down(1)) })
-		keyboard.up().onPressDo({ self.verificarPosicionY(jugador1.position().up(1)) })
+		keyboard.left().onPressDo({ if (pantallaInicio.chequea()){botonpersonaje.selPersonaje()}else{self.verificarPosicionX(jugador1.position().left(1)) }})
+		keyboard.right().onPressDo({ if (pantallaInicio.chequea()){botonpersonaje.selPersonaje()}else{self.verificarPosicionX(jugador1.position().right(1)) }})
+		keyboard.down().onPressDo({ if (pantallaInicio.chequea()){pantallaInicio.cambio()}else{ self.verificarPosicionY(jugador1.position().down(1)) }})
+		keyboard.up().onPressDo({  if (pantallaInicio.chequea()){pantallaInicio.cambio()}else{self.verificarPosicionY(jugador1.position().up(1)) }})
+		keyboard.k().onPressDo({  if (pantallaInicio.chequea()){}else{jugador1.soltarBomba(jugador1.position())}})
+		keyboard.enter().onPressDo({if (pantallaInicio.chequea()){pantallaInicio.eligio()}})
+		keyboard.g().onPressDo({if (pantallaInicio.chequea()){pantallaInicio.elegido(2)}})
 	}
 	
 	method verificarPosicionX(as){
@@ -286,7 +252,8 @@ object config {
 	
 
 	method configurarSeguimiento(enemigo){
-		game.onTick(2300,"Persigue", {enemigo.Persigue(jugador1.position() ,jugador1.position().x(), jugador1.position().y())})
+		game.onTick(3000,"Persigue", {enemigo.PersigueVertical(jugador1.position(),jugador1.position().y(), jugador1.position().y())})
+	
 	}
 
 }

@@ -1,53 +1,34 @@
 import wollok.game.*
-import bombita.*
-import config.*
 
 class Mejoras{
 	const property image
 	var property position
 	
-	
-	// Validacion de metodos que no le pueden faltar a una mejora
-	method desactivar(personaje){}
-	
-	method activar(personaje){}
-	
-	method programarDesactivar(personaje){
-		game.schedule(5000, {=>self.desactivar(personaje)})
+	method desactivar(personaje){
+		return true
 	}
 	
-	method mensajeActivacion(){
-		return 'Mejora Activada'
+	method activar(personaje){
+		
 	}
 	
-	method seQuemo(){
-		game.removeVisual(self)
-	}
-	
+	method seQuemo(){}
 	method esMejora() = true
 	method esPared() = false
 	method esCaja() = false
-	method esBomba() = false
-	method esJugador() = false	
+	method esBomba() = false	
 }
 
 class TomaMate inherits Mejoras{
 	
-	override method mensajeActivacion(){
-		return 'Pasado de mates'
-	}
-	
 	override method activar(personaje){
-		self.programarDesactivar(personaje)
+		game.schedule(5000, self.desactivar(personaje))
 		personaje.escudo(true)
 	}
 	
 	override method desactivar(personaje){
 		personaje.escudo(false)
-	}
-	
-	method contiene(){
-		return 'tieneMate'
+		return true
 	}
 }
 
@@ -55,41 +36,28 @@ class FumaPorro inherits Mejoras{
 	var property nuevaVelocidad = 2
 	var property velDefault = 1
 	
-	override method mensajeActivacion(){
-		return 'Pego?'
-	}
-	
 	override method activar(personaje){
-		self.programarDesactivar(personaje)
-		config.reconfigurarTeclas()
+		game.schedule(5000, self.desactivar(personaje))
+		personaje.velocidad(nuevaVelocidad)
 	}
 	
 	override method desactivar(personaje){
-		config.volverTeclas()
-	}
-	
-	method contiene (){
-		return 'tienePorro'
+		personaje.velocidad(velDefault)
+		return true
 	}
 }
 
 class ComeAsado inherits Mejoras{
-	
-	override method mensajeActivacion(){
-		return 'Poder Asado'
-	}
-	
+	const nuevoRadio = 2
+	const radioDefault = 1
 	
 	override method activar(personaje){
-		self.programarDesactivar(personaje)
-		personaje.radioAumentado(true)
+		game.schedule(5000, self.desactivar(personaje))
+		personaje.radio(nuevoRadio)
 	}
 	
 	override method desactivar(personaje){
-		personaje.radioAumentado(false)
-	}
-	
-	method contiene (){
-		return 'tieneAsado'
+		personaje.radio(radioDefault)
+		return true
 	}
 }

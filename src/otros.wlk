@@ -8,11 +8,9 @@ class Caja {
 	var property position
 	method image() = "cabildofrente.png"
 	
-	method esMejora() = false
-	method esPared() = false
 	method esCaja() = true
+	method esPared() = false
 	method esBomba() = false
-	method esJugador() = false
 	
 	method removerConProbabilidadDeMejora() {
         game.removeVisual(self)
@@ -27,7 +25,7 @@ class Caja {
         const mejora = [
         new TomaMate(position = self.position(), image='bombita.png')
         ,new FumaPorro(position = self.position(), image = 'cajita.png')
-       	,new ComeAsado(position = self.position(), image='Bomba.png')
+        ,new ComeAsado(position = self.position(), image='Bomba.png')
         ].anyOne()
         
         game.addVisual(mejora)
@@ -38,6 +36,7 @@ class Caja {
 		self.removerConProbabilidadDeMejora()
 	}
 	
+	method esMejora(){return false}
 }
 
 
@@ -52,36 +51,30 @@ method image() = "Fuego.png"
 			collidObj.forEach({e=>e.seQuemo()})
 		}
 		
-		game.schedule(1000, {self.eliminaVisual()})	
+		game.removeVisual(self)	
 	}
 
 	method poneFuego(posicion){
 		self.position(posicion)
-		game.schedule(1, {self.Destruye()})
+		game.schedule(500, {self.Destruye()})
 		return self
 	}
 	
-	method eliminaVisual(){
-		game.removeVisual(self)
-	}
-	
 	method seQuemo(){}
-	method esMejora() = false
 	method esPared() = false
 	method esCaja() = false
 	method esBomba() = false
-	method esJugador() = false
+	method esMejora() = false
 	
 }
 
 class Pared{
 	var property position
 	method image() = "pared.png"
-	method esMejora() = false
 	method esPared() = true
 	method esCaja() = false
 	method esBomba() = false
-	method esJugador() = false
+	method esMejora() = false
 	method seQuemo(){}
 
 }
