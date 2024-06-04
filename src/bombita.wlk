@@ -211,6 +211,8 @@ class Enemigos {
 //tiene que chequear que este mas a la izquierda, derecha arriba o abajo
 
 
+
+
 	method seQuemo(){
 			 self.image ("BOMBITARODRIGUEZBN.png")
 			 estaVivo = false
@@ -240,7 +242,7 @@ class Enemigos {
 }
 
 
-object muestra inherits Jugador(position = game.at (11, 4), image = "Fuego.png"){
+object muestra inherits Jugador(position = game.at (11, 4), image = "BOMBITARODRIGUEZ.png"){
 	
 }
 

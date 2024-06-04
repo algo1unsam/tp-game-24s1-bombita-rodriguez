@@ -7,7 +7,7 @@ import bombita.*
 
 class Colisionadores{
 	var property position = game.origin()
-	var property image = "cajita.png" 
+	
 	
 	
 	method poneColisionador(posicion, enemigo){

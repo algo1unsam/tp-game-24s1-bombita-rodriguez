@@ -27,7 +27,7 @@ class Caja {
         const mejora = [
         new TomaMate(position = self.position(), image='bombita.png')
         ,new FumaPorro(position = self.position(), image = 'cajita.png')
-       	,new ComeAsado(position = self.position(), image='Bomba.png')
+       	,new ComeAsado(position = self.position(), image='parrilla.png')
         ].anyOne()
         
         game.addVisual(mejora)

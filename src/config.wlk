@@ -11,9 +11,12 @@ const enemigo1 = new Enemigos(position = game.at(23,9))
 
 object iniciarJugador1 {
 	method iniciar(){
+	jugador1.estaVivo(true)
+	jugador1.position(game.at(1,1))
+	enemigo1.position(game.at(23,9))
+	config.configurarTeclas()
 	game.addVisual(jugador1)
 	game.addVisual(enemigo1)
-	config.configurarTeclas()
 	game.schedule(2000,{config.configurarSeguimiento(enemigo1)})
 	config.configurarColisiones(jugador1)
 	config.configurarColisiones(enemigo1)
@@ -238,7 +241,9 @@ object config {
 		keyboard.up().onPressDo({  if (pantallaInicio.chequea()){pantallaInicio.cambio()}else{self.verificarPosicionY(jugador1.position().up(1)) }})
 		keyboard.k().onPressDo({  if (pantallaInicio.chequea()){}else{jugador1.soltarBomba(jugador1.position())}})
 		keyboard.enter().onPressDo({if (pantallaInicio.chequea()){pantallaInicio.eligio()}})
+		keyboard.l().onPressDo({if (pantallaInicio.chequea()){}else{jugador1.activarMejora()}})
 		keyboard.g().onPressDo({if (pantallaInicio.chequea()){pantallaInicio.elegido(2)}})
+		
 	}
 
 	method reconfigurarTeclas(){
@@ -271,7 +276,7 @@ object config {
 	
 
 	method configurarSeguimiento(enemigo){
-		game.onTick(2300,"Persigue", {enemigo.Persigue(jugador1.position() ,jugador1.position().x(), jugador1.position().y())})
+		game.onTick(2300,"Persigue", {enemigo.PersigueVertical(jugador1.position() ,jugador1.position().x(), jugador1.position().y())})
 	}
 
 }

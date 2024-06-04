@@ -17,11 +17,11 @@ object pantallaInicio {
 		if (estaeligiendo){
 			if (elegido == 0){
 				elegido = 1
-				botonpersonaje.image("pared.png")
-				botoninicio.image("bombita.png")
-			}else {
-				botonpersonaje.image("bombita.png")
+				botonpersonaje.image("Botonpj.png")
 				botoninicio.image("pared.png")
+			}else {
+				botonpersonaje.image("pared.png")
+				botoninicio.image("Botoninicio.png")
 				elegido =0
 			}}
 	}
@@ -84,19 +84,21 @@ class Botones{
 	
 }
 
-object botoninicio inherits Botones(position = game.at(11, 5), image = "pared.png"){
+object botoninicio inherits Botones(position = game.at(11, 5), image = "Botoninicio.png"){
 	override method elegido(){
 		pantallaInicio.estainicio(false)
 		game.clear()
 		config.borraTeclas()
-		iniciarJugador1.iniciar()
-		iniciarParedes.iniciar()
-		iniciarCajas.iniciar()
+		iniciarCajas.llenoVector()
+		game.schedule(1000, {iniciarJugador1.iniciar()
+		iniciarParedes.iniciar()})
+	
+		
 	}
 }
 
 
-object botonpersonaje inherits Botones(position = game.at(11, 2), image = "bombita.png"){
+object botonpersonaje inherits Botones(position = game.at(11, 2), image = "pared.png"){
 	var cambiapersonaje = 0
 	
 	override method elegido(){

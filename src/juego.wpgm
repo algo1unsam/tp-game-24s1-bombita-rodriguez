@@ -10,9 +10,10 @@ program Bombita {
 	game.title("Bombita")
 	game.width(25)
 	game.height(11)
-	game.boardGround("fondo.jpg")
+//	game.boardGround("fondo.jpg")
 	
 	//VISUALES
+	
 	pantallaInicio.On()
 	
 		
