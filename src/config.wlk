@@ -192,9 +192,9 @@ object config {
 	
 	var property estaReiniciado = false
 	
-	method gameOver(){
+	method gameOver(jugador){
 		estaReiniciado = false
-		game.say(jugador1, "Presiona R para reiniciar")
+		game.say(jugador, "Presiona R para reiniciar")
 		keyboard.r().onPressDo({self.reiniciarJuego()})	//Intente armar metodo para reiniciar el juego pero no se puede mover el jugador
 	}
 	
