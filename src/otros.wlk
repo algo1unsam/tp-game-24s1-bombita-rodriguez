@@ -37,7 +37,6 @@ class Caja {
 	method seQuemo(){
 		self.removerConProbabilidadDeMejora()
 	}
-	
 }
 
 
@@ -52,7 +51,7 @@ method image() = "Fuego.png"
 			collidObj.forEach({e=>e.seQuemo()})
 		}
 		
-		game.schedule(1000, {self.eliminaVisual()})	
+		game.schedule(500, {self.eliminaVisual()})	
 	}
 
 	method poneFuego(posicion){
@@ -60,7 +59,7 @@ method image() = "Fuego.png"
 		game.schedule(1, {self.Destruye()})
 		return self
 	}
-	
+
 	method eliminaVisual(){
 		game.removeVisual(self)
 	}
@@ -71,16 +70,15 @@ method image() = "Fuego.png"
 	method esCaja() = false
 	method esBomba() = false
 	method esJugador() = false
-	
 }
 
 class Pared{
 	var property position
 	method image() = "pared.png"
-	method esMejora() = false
 	method esPared() = true
 	method esCaja() = false
 	method esBomba() = false
+	method esMejora() = false
 	method esJugador() = false
 	method seQuemo(){}
 
