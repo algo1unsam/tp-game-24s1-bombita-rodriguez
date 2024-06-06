@@ -3,10 +3,11 @@ import bombita.*
 import config.*
 
 class Mejoras{
-	const property image
+	var property image
 	var property position
 	
-	
+	method inventario(){
+	}
 	// Validacion de metodos que no le pueden faltar a una mejora
 	method desactivar(personaje){}
 	
@@ -46,6 +47,12 @@ class TomaMate inherits Mejoras{
 		personaje.escudo(false)
 	}
 	
+	override method inventario(){
+		self.position(game.at(23,0))
+		self.image("mate.png")
+		 
+	}
+	
 	method contiene(){
 		return 'tieneMate'
 	}
@@ -68,6 +75,11 @@ class FumaPorro inherits Mejoras{
 		config.volverTeclas()
 	}
 	
+	override method inventario(){
+		self.position(game.at(22,0))
+		self.image("faso.png")
+	}
+	
 	method contiene (){
 		return 'tienePorro'
 	}
@@ -87,6 +99,11 @@ class ComeAsado inherits Mejoras{
 	
 	override method desactivar(personaje){
 		personaje.radioAumentado(false)
+	}
+	
+	override method inventario(){
+		self.position(game.at(21,0))
+		self.image("parrilla.png")
 	}
 	
 	method contiene (){

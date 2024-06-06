@@ -21,13 +21,8 @@ class Jugador {
   	var property estaVivo = true
   	var property image = imagenElegida.imagenelegida()
   	
-  	method image(){if(mejoras.any{p=>p.esMejora()}){
-		return "bombita.png"
-	}else if(escudo){
-		return "cajita.png"
-	} else{
-		return image	
-	}}
+  
+  
   
 	method mejoras(){return mejoras}
 	
@@ -62,7 +57,7 @@ class Jugador {
 	method agarrarMejora(mejora){
 		if(self.validarMejora(mejora)){
 			mejoras.add(mejora)
-			game.removeVisual(mejora)	
+			mejora.inventario()
 		} else{
 			game.say(self,'Ya tengo la mejora')
 		}
@@ -85,6 +80,7 @@ class Jugador {
 
 	method activarMejora(){
 		if (mejoras.size() != 0){
+			game.removeVisual(mejoras.first())
 			const mejoraParaActivar = mejoras.first()
 			mejoras.remove(mejoraParaActivar)
 			mejoraParaActivar.activar(self)
@@ -129,70 +125,19 @@ class Enemigos {
 		if (estaVivo){
 		if (self.position().distance(posicion)<3){self.soltarBomba(self.position())}
 		else {
-		if (posicionY.roundUp() > self.position().y().roundUp() and verohor == 1){self.Ir(2)}
-		else if (posicionY.roundUp() < self.position().y().roundUp() and verohor == 1){self.Ir(3)}
-		else if (posicionX.roundUp() > self.position().x().roundUp() and verohor == 2){self.Ir(1)}
-		else if(posicionX.roundUp() < self.position().x().roundUp() and verohor == 2){self.Ir(4)}else{}
+		if (posicionY.roundUp() > self.position().y().roundUp() and verohor == 1){movimientonpc.arriba()}
+		else if (posicionY.roundUp() < self.position().y().roundUp() and verohor == 1){movimientonpc.abajo()}
+		else if (posicionX.roundUp() > self.position().x().roundUp() and verohor == 2){movimientonpc.izquierda()}
+		else if(posicionX.roundUp() < self.position().x().roundUp() and verohor == 2){movimientonpc.derecha()}else{}
 		}
 		}else{}
         }
         
  
 
-	method Ir(va){
-		
-		posicionPrevia = position
-		
-		if(va==1){
-			verohor = 1
-			
-			position=self.position().right(1)
-		}
-		else if(va==2){
-			verohor = 2
-			
-			position=self.position().up(1)
-		}
-		else if (va==3){
-			verohor = 2
-			
-			position=self.position().down(1)
-		}
-		else if (va==4){
-			verohor = 1
-			
-			position=self.position().left(1)
-		}
-		
-
-		
-
-		
-}
-
-	method escapaBombaDer(){
-			posicionPrevia = position
-			position=self.position().right(1)
-			
-		
-	}
 	
-	method escapaBombaIzq(){
-		posicionPrevia = position
-		position=self.position().left(1)
-		
-		
-	}
-	method escapaBombaArriba(){
-		posicionPrevia = position
-		position=self.position().up(1)
-		
-	}
-	method escapaBombaAbajo(){
-		posicionPrevia = position
-		position=self.position().down(1)
-		
-	}
+
+	
 
 	method volver(){
 	
