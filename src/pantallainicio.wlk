@@ -6,7 +6,7 @@ import mejoras.*
 import bombita.*
 import Colisionadores.*
 
-const personajes = ["Bomba.png", "BOMBITARODRIGUEZ.PNG", "peron64.png"]
+const personajes = ["elChe.png", "BOMBITARODRIGUEZ.PNG", "peron64.png", "milei.png"]
 
 
 object pantallaInicio {
@@ -17,11 +17,11 @@ object pantallaInicio {
 		if (estaeligiendo){
 			if (elegido == 0){
 				elegido = 1
-				botonpersonaje.image("Botonpj.png")
-				botoninicio.image("pared.png")
-			}else {
-				botonpersonaje.image("pared.png")
+				botonpersonaje.image("Botonpjseleccionado.png")
 				botoninicio.image("Botoninicio.png")
+			}else {
+				botonpersonaje.image("Botonpj.png")
+				botoninicio.image("Botoninicioseleccionado.png")
 				elegido =0
 			}}
 	}
@@ -45,8 +45,8 @@ object pantallaInicio {
 			}else{
 				game.clear()
 				elegido = 0
-				botonpersonaje.image("bombita.png")
-				botoninicio.image("pared.png")
+				botonpersonaje.image("Botonpj.png")
+				botoninicio.image("Botoninicioseleccionado.png")
 				self.vuelveinicio()
 			
 		}
@@ -84,13 +84,13 @@ class Botones{
 	
 }
 
-object botoninicio inherits Botones(position = game.at(11, 5), image = "Botoninicio.png"){
+object botoninicio inherits Botones(position = game.at(11, 5), image = "Botoninicioseleccionado.png"){
 	override method elegido(){
 		pantallaInicio.estainicio(false)
 		game.clear()
 		config.borraTeclas()
 		iniciarCajas.llenoVector()
-		game.schedule(1000, {iniciarJugador1.iniciar()
+		game.schedule(500, {iniciarJugador1.iniciar()
 		iniciarParedes.iniciar()})
 	
 		
@@ -98,7 +98,7 @@ object botoninicio inherits Botones(position = game.at(11, 5), image = "Botonini
 }
 
 
-object botonpersonaje inherits Botones(position = game.at(11, 2), image = "pared.png"){
+object botonpersonaje inherits Botones(position = game.at(11, 2), image = "Botonpj.png"){
 	var cambiapersonaje = 0
 	
 	override method elegido(){

@@ -25,8 +25,8 @@ class Caja {
     method generarMejora() {
         
         const mejora = [
-        new TomaMate(position = self.position(), image='bombita.png')
-        ,new FumaPorro(position = self.position(), image = 'cajita.png')
+        new TomaMate(position = self.position(), image='mate.png')
+        ,new FumaPorro(position = self.position(), image = 'faso.png')
        	,new ComeAsado(position = self.position(), image='parrilla.png')
         ].anyOne()
         
@@ -83,4 +83,67 @@ class Pared{
 	method seQuemo(){}
 
 }
+
+object movimientonpc{
+	
+	method escapaBombaDer(jugador){
+			jugador.posicionPrevia(jugador.position()) 
+			jugador.position(jugador.position().right(1))
+			
+		
+	}
+	
+	method escapaBombaIzq(jugador){
+		jugador.posicionPrevia(jugador.position()) 
+			jugador.position(jugador.position().left(1))
+		
+		
+	}
+	method escapaBombaArriba(jugador){
+		jugador.posicionPrevia(jugador.position()) 
+			jugador.position(jugador.position().up(1))
+		
+	}
+	method escapaBombaAbajo(jugador){
+		jugador.posicionPrevia(jugador.position()) 
+			jugador.position(jugador.position().down(1))
+		
+	}
+	
+	
+	
+		
+		method derecha(jugador){
+			jugador.posicionPrevia(jugador.position())
+			jugador.verohor(1)
+			
+			jugador.position(jugador.position().right(1))
+		}
+		method arriba(jugador){
+			jugador.posicionPrevia(jugador.position())
+			jugador.verohor(2)
+			
+			jugador.position(jugador.position().up(1))
+		}
+		method abajo(jugador){
+			jugador.posicionPrevia(jugador.position())
+			jugador.verohor(2)
+			
+			jugador.position(jugador.position().down(1))
+		}
+		method izquierda(jugador){
+			jugador.posicionPrevia(jugador.position())
+			jugador.verohor(1)
+			
+			jugador.position(jugador.position().left(1))
+		}
+		
+
+		
+
+		
+}
+	
+	
+
 
