@@ -1,8 +1,22 @@
 import wollok.game.*
-import pepita.*
+import bombita.*
+import otros.*
+import config.*
+import pantallainicio.*
 
-program juego {
-	game.title("Juego Base")
-	game.addVisual(pepita)
+program Bombita {
+
+	//CONFIG
+	game.title("Bombita")
+	game.width(25)
+	game.height(11)
+	game.boardGround("fondo.jpg")
+	
+	//VISUALES
+	
+	pantallaInicio.On()
+	
+		
+	//JUEGO
 	game.start()
 }
